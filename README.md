@@ -1,5 +1,5 @@
 # Sprint1-SQC
-Repozytorium zawierające kod projektu Scenario Quality Checker, realizowanego na potrzeby przedmiotu Inżynieria Oprogramowania. Dla analityków dokumentujących wymagania funkcjonalne za pomocą scenariuszy nasza aplikacja SQC dostarczy informacji ilościowych oraz umożliwi wykrywanie problemów w wymaganiach funkcjonalnych zapisanych w postaci scenariuszy. Aplikacja będzie dostępna poprzez GU,I a także jako zdalne API dzięki czemu można ją zintegrować z istniejącymi narzędziami.
+Repozytorium zawierające kod projektu Scenario Quality Checker, realizowanego na potrzeby przedmiotu Inżynieria Oprogramowania. Dla analityków dokumentujących wymagania funkcjonalne za pomocą scenariuszy nasza aplikacja SQC dostarczy informacji ilościowych oraz umożliwi wykrywanie problemów w wymaganiach funkcjonalnych zapisanych w postaci scenariuszy. Aplikacja będzie dostępna poprzez GUI, a także jako zdalne API dzięki czemu można ją zintegrować z istniejącymi narzędziami.
 
 # Autorzy:
 - Bartosz Skrzypczak 155832
