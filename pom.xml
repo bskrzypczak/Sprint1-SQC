@@ -11,12 +11,12 @@
         <version>2.3.3.RELEASE</version>
     </parent>
 
-    <groupId>pl.put.poznan</groupId>
-    <artifactId>io-project-architecture</artifactId>
-    <version>0.1</version>
+    <groupId>L4-Epsilon</groupId>
+    <artifactId>Scenario-Quality-Checker</artifactId>
+    <version>1.0.0</version>
 
 	<properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
     </properties>
 
     
