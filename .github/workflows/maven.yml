@@ -35,3 +35,5 @@ jobs:
       with:
         name: packaged-jar
         path: target/*.jar
+    - name: Generate javadoc
+      run: mvn javadoc:javadoc
