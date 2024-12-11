@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ScenarioQualityCheckerApplication {
 
     public static void main(String[] args) {
-        System.out.println("Błagam");
+        System.out.println("...");
         SpringApplication.run(ScenarioQualityCheckerApplication.class, args);
     }
 }
