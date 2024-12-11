@@ -59,10 +59,10 @@
             	<version>3.4.1</version>
             	<executions>
                 	<execution>
-                    		<phase>package</phase>
-                    		<goals>
-                        		<goal>javadoc</goal>
-                    		</goals>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
                 	</execution>
             	</executions>
             </plugin>
