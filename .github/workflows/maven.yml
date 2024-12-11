@@ -35,5 +35,12 @@ jobs:
       with:
         name: packaged-jar
         path: target/*.jar
+        
     - name: Generate javadoc
-      run: mvn javadoc:javadoc
+      run: mvn clean package javadoc:javadoc
+      
+    - name: Upload JavaDoc
+      uses: actions/upload-artifact@v3
+      with:
+        name: javadoc
+        path: target/site/apidocs
