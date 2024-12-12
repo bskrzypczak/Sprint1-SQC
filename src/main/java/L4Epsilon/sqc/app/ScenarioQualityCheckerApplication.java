@@ -1,7 +1,11 @@
 package L4Epsilon.sqc.app;
 
 import L4Epsilon.sqc.logic.elements.*;
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,17 +15,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ScenarioQualityCheckerApplication {
 
     public static void main(String[] args) {
+        String path = "test1.json";
 
-        Action action = new Action("Bibliotekarz wybiera opcje dodania nowej pozycji ksiazkowej");
+        JSONObject scenarioJSON = parseJSON(path);
+
         List<Action> actions = new ArrayList<>();
         List<String> actors = new ArrayList<>();
         List<Step> steps = new ArrayList<>();
-        actions.add(action);
-        actors.add("Bibliotekarz");
-        Step step = new Step(actions);
-        steps.add(step);
 
-        Scenario scenario = new Scenario("Dodanie ksiazki", "System", actors, steps);
+        Scenario scenario = new Scenario(scenarioJSON.getString("title"), scenarioJSON.getString("system_actor"), actors, steps);
 
         System.out.println("SCENARIUSZ TESTOWY\n ");
         System.out.println("Tytuł: " + scenario.getTitle());
@@ -33,5 +35,21 @@ public class ScenarioQualityCheckerApplication {
 
 
         //SpringApplication.run(ScenarioQualityCheckerApplication.class, args);
+    }
+
+    /**
+     * Parsuje plik JSON i zwraca JSONObject.
+     *
+     * @param path ścieżka do JSONa.
+     * @return JSONObject reprezentujący zawartość pliku.
+     */
+
+    public static JSONObject parseJSON(String path) {
+        try {
+            String fileContent = new String(Files.readAllBytes(Paths.get(path)));
+            return new JSONObject(fileContent);
+        } catch (IOException e) {
+            throw new RuntimeException("Błąd podczas odczytu pliku JSON: " + e.getMessage(), e);
+        }
     }
 }
