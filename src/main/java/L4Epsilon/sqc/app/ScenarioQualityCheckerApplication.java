@@ -1,6 +1,7 @@
 package L4Epsilon.sqc.app;
 
 import L4Epsilon.sqc.logic.elements.*;
+import L4Epsilon.sqc.logic.visitors.KeyWordAnalysisVisitor;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
@@ -20,10 +21,6 @@ public class ScenarioQualityCheckerApplication {
 
         // plik JSON -> JSONObject
         JSONObject scenarioJSON = parseJSON(path);
-
-        List<Action> actions = new ArrayList<>();
-        List<String> actors = new ArrayList<>();
-        List<Step> steps = new ArrayList<>();
 
         // JSONObject -> model obiektowy
         Scenario scenario = transformJSONToModel(scenarioJSON);
