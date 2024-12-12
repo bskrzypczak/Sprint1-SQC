@@ -1,0 +1,44 @@
+{
+  "title": "Zwrot garnituru",
+  "actors": [
+    "Wlasciciel",
+    "Uzytkownik"
+  ],
+  "system_actor": "System",
+  "steps": [
+    {
+      "action": "Wlasciciel wybiera opcje zwrotu garnituru"
+    },
+    {
+      "action": "System prosi o weryfikacje garnituru"
+    },
+    {
+      "action": "Wlasciciel weryfikuje garnitur"
+    },
+    {
+      "condition": "IF Termin zwrotu zostal przekroczony",
+      "steps": [
+        {
+          "action": "System nalicza oplate za zwloke"
+        },
+        {
+          "action": "Wlasciciel informuje uzytkownik o koniecznosci uiszczenia oplaty"
+        }
+      ]
+    },
+    {
+      "condition": "ELSE Termin zwrotu zostal dotrzymany",
+      "steps": [
+        {
+          "action": "System rejestruje zwrot garnituru bez dodatkowych oplat"
+        },
+        {
+          "action": "System informuje o pomyslnym zwrocie garnituru i aktualizuje jego status na dostepny"
+        },
+        {
+          "action": "Wlasciciel przekazuje potwierdzenie uzytkownikowi"
+        }
+      ]
+    }
+  ]
+}

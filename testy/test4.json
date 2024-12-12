@@ -1,0 +1,44 @@
+{
+  "title": "Przyjęcie towaru do magazynu",
+  "actors": [
+    "Magazynier"
+  ],
+  "system_actor": "System",
+  "steps": [
+    {
+      "text": "Magazynier wybiera opcję przyjęcia towaru do magazynu"
+    },
+    {
+      "text": "System wyświetla formularz przyjęcia towaru"
+    },
+    {
+      "text": "Magazynier podaje dane o dostawie (numer faktury, data dostawy, dane dostawcy)"
+    },
+    {
+      "text": "Magazynier wprowadza listę przyjmowanych produktów"
+    },
+    {
+      "loop": "FOR EACH produkt_w_dostawie",
+      "steps": [
+        {
+          "text": "Magazynier skanuje kod produktu"
+        },
+        {
+          "text": "Magazynier wprowadza ilość przyjmowanego towaru"
+        },
+        {
+          "text": "System zapisuje dane produktu i aktualizuje stan magazynowy"
+        },
+        {
+          "text": "System informuje o poprawnym dodaniu produktu do magazynu"
+        }
+      ]
+    },
+    {
+      "text": "Magazynier zatwierdza przyjęcie towaru"
+    },
+    {
+      "text": "System generuje raport z przyjęcia towaru i informuje o zakończeniu procesu"
+    }
+  ]
+}
