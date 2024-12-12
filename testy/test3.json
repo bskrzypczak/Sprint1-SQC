@@ -1,0 +1,47 @@
+{
+  "title": "Rejestracja nowego uzytkownika",
+  "actors": [
+    "Pracownik",
+    "Uzytkownik"
+  ],
+  "system_actor": "System",
+  "steps": [
+    {
+      "action": "Pracownik wybiera opcje rejestracji nowego uzytkownika"
+    },
+    {
+      "action": "Wyswietla sie formularz rejestracyjny"
+    },
+    {
+      "action": "Pracownik podaje dane uzytkownika (np. imie, nazwisko, adres, numer telefonu)"
+    },
+    {
+      "condition": "IF Uzytkownik chce stworzyc wlasny numer ID",
+      "steps": [
+        {
+          "action": "System generuje unikalny numer ID, wybrany przez uzytkownika"
+        }
+      ]
+    },
+    {
+      "condition": "ELSE Uzytkownik chce dostac losowo wygenerowany numer ID",
+      "steps": [
+        {
+          "action": "System generuje nowy losowy numer ID dla uzytkownika"
+        }
+      ]
+    },
+    {
+      "action": "System przypisuje wygenerowany numer ID do uzytkownika"
+    },
+    {
+      "action": "System informuje o poprawnym przypisaniu ID do uzytkownika"
+    },
+    {
+      "action": "Pracownik zatwierdza rejestracje uzytkownika"
+    },
+    {
+      "action": "System informuje o poprawnym dodaniu nowego uzytkownika do systemu"
+    }
+  ]
+}
