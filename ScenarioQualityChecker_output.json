@@ -1,6 +1,0 @@
-{
-    "generatedText": "1. Magazynier wybiera opcję przyjęcia towaru do magazynu\n2. System wyświetla formularz przyjęcia towaru\n3. Magazynier podaje dane o dostawie (numer faktury, data dostawy, dane dostawcy)\n4. Magazynier wprowadza listę przyjmowanych produktów\n5. FOR EACH produkt_w_dostawie\n5.1. Magazynier skanuje kod produktu\n5.2. Magazynier wprowadza ilość przyjmowanego towaru\n5.3. System zapisuje dane produktu i aktualizuje stan magazynowy\n5.4. System informuje o poprawnym dodaniu produktu do magazynu\n6. Magazynier zatwierdza przyjęcie towaru\n7. System generuje raport z przyjęcia towaru i informuje o zakończeniu procesu\n",
-    "stepsCount": 11,
-    "title": "Przyjęcie towaru do magazynu",
-    "keyWordOccurrences": 1
-}
