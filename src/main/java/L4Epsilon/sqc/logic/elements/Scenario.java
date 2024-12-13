@@ -7,13 +7,13 @@ public class Scenario implements Element{
     private String title;
     private String systemActor;
     private List<String> actors;
-    private List<Step> steps;
+    private List<Instruction> instructions;
 
-    public Scenario(String title, String systemActor, List<String> actors, List<Step> steps){
+    public Scenario(String title, String systemActor, List<String> actors, List<Instruction> instructions){
         this.title = title;
         this.systemActor = systemActor;
         this.actors = actors;
-        this.steps = steps;
+        this.instructions = instructions;
     }
 
     public String getTitle(){
@@ -28,8 +28,8 @@ public class Scenario implements Element{
         return actors;
     }
 
-    public List<Step> getSteps(){
-        return steps;
+    public List<Instruction> getInstructions(){
+        return instructions;
     }
 
     @Override

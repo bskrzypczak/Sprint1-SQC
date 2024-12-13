@@ -2,16 +2,23 @@ package L4Epsilon.sqc.logic.elements;
 
 import L4Epsilon.sqc.logic.visitors.Visitor;
 import java.util.List;
+import java.util.ArrayList;
 
-public class Step implements Element{
-    private List<Action> actions;
+public class Step extends Instruction{
+    private List<Instruction> nextInstructions;
+    private String text;
 
-    public Step(List<Action> actions){
-        this.actions = actions;
+    public Step(List<Instruction> nextInstructions, String text){
+        this.nextInstructions = (nextInstructions != null) ? nextInstructions : new ArrayList<>();
+        this.text = text;
     }
 
-    public List<Action> getActions(){
-        return actions;
+    public List<Instruction> getNextInstructions(){
+        return nextInstructions;
+    }
+
+    public String getText(){
+        return text;
     }
 
     @Override

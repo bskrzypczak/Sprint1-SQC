@@ -13,7 +13,7 @@ public class ScenarioQualityCheckerController {
 
     private static final Logger logger = LoggerFactory.getLogger(ScenarioQualityCheckerController.class);
 
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    /*@RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public String get(@PathVariable String text,
                               @RequestParam(value="transforms", defaultValue="upper,escape") String[] transforms) {
 
@@ -37,7 +37,7 @@ public class ScenarioQualityCheckerController {
         // perform the transformation, you should run your logic here, below is just a silly example
         ScenarioQualityChecker transformer = new ScenarioQualityChecker(transforms);
         return transformer.transform(text);
-    }
+    }*/
 
 
 

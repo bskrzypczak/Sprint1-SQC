@@ -2,7 +2,7 @@ package L4Epsilon.sqc.logic.elements;
 
 import L4Epsilon.sqc.logic.visitors.Visitor;
 
-public class Action implements Element{
+public class Action extends Instruction{
     private String text;
 
     public Action(String text){
