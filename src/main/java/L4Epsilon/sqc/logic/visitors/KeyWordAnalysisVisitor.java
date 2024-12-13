@@ -10,6 +10,12 @@ public class KeyWordAnalysisVisitor implements Visitor{
         return this.occurrenceCount;
     }
 
+
+    /**
+     * Akceptuje każdą instrukcję po kolei
+     *
+     * @param scenario wygenerowany scenariusz
+     */
     @Override
     public void visitScenario(Scenario scenario){
         for (Instruction instruction : scenario.getInstructions()){
@@ -17,6 +23,11 @@ public class KeyWordAnalysisVisitor implements Visitor{
         }
     }
 
+    /**
+     * Inkrementuje occurrenceCount dla każdego słowa kluczowego oraz odwiedza kolejne kroki w danych składniach
+     *
+     * @param step instancja klasy step
+     */
     @Override
     public void visitStep(Step step) {
         String[] keyWords = {"IF", "ELSE", "FOR EACH"};
@@ -32,7 +43,12 @@ public class KeyWordAnalysisVisitor implements Visitor{
     }
 
 
-
+    /**
+     * zajebista metoda
+     * pozdrawiam z rodzinka
+     * jas is stick
+     *
+     */
     @Override
     public void visitAction(Action action){}
 }

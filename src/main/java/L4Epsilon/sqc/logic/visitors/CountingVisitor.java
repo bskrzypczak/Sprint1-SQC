@@ -9,6 +9,12 @@ public class CountingVisitor implements Visitor{
         return stepsCount;
     }
 
+
+    /**
+     * Akceptuje każdą instrukcję po kolei
+     *
+     * @param scenario wygenerowany scenariusz
+     */
     @Override
     public void visitScenario(Scenario scenario){
         for (Instruction instruction : scenario.getInstructions()){
@@ -16,6 +22,11 @@ public class CountingVisitor implements Visitor{
         }
     }
 
+    /**
+     * Inkrementuje stepsCount oraz akceptuje każdą kolejną instrukcję
+     *
+     * @param step instancja klasy step
+     */
     @Override
     public void visitStep(Step step){
         stepsCount++;
@@ -24,6 +35,11 @@ public class CountingVisitor implements Visitor{
         }
     }
 
+    /**
+     * Inkrementuje stepsCount
+     *
+     * @param action instancja klasy akcja
+     */
     @Override
     public void visitAction(Action action){
         stepsCount++;
