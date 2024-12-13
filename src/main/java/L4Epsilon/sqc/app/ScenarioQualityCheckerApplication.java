@@ -17,9 +17,8 @@ public class ScenarioQualityCheckerApplication {
         KeyWordAnalysisVisitor keyWordVisitor = new KeyWordAnalysisVisitor();
         TextGenerationVisitor textVisitor = new TextGenerationVisitor();
 
-        String inputPath = "testy/test4.json";
-        String outputPath="ScenarioQualityChecker_output.json";
-        ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
+        String path = "testy/test4.json";
+        ScenarioQualityChecker checker = new ScenarioQualityChecker(path);
         Scenario scenario = checker.getReady();
 
         scenario.accept(countingVisitor);
@@ -31,7 +30,7 @@ public class ScenarioQualityCheckerApplication {
         System.out.println("Liczba krokow: " + countingVisitor.getStepsCount());
         System.out.println("Liczba krokow z kluczowymi slowami: " + keyWordVisitor.getOccurrenceCount());
 
-        checker.generateJsonOutput(scenario, countingVisitor, keyWordVisitor, textVisitor, outputPath);
+
         //SpringApplication.run(ScenarioQualityCheckerApplication.class, args);
     }
 
