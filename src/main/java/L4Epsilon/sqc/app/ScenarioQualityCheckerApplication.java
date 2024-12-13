@@ -21,15 +21,15 @@ public class ScenarioQualityCheckerApplication {
         ScenarioQualityChecker checker = new ScenarioQualityChecker(path);
         Scenario scenario = checker.getReady();
 
-
         scenario.accept(countingVisitor);
         scenario.accept(keyWordVisitor);
         scenario.accept(textVisitor);
 
         System.out.println("Tytuł: " + scenario.getTitle());
-        checker.printInstructions(scenario.getInstructions());
+        System.out.println(textVisitor.getGeneratedText());
         System.out.println("Liczba krokow: " + countingVisitor.getStepsCount());
         System.out.println("Liczba krokow z kluczowymi slowami: " + keyWordVisitor.getOccurrenceCount());
+
 
         //SpringApplication.run(ScenarioQualityCheckerApplication.class, args);
     }

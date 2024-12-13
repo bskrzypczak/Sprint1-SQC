@@ -2,32 +2,49 @@ package L4Epsilon.sqc.logic.visitors;
 
 import L4Epsilon.sqc.logic.elements.*;
 
-public class TextGenerationVisitor implements Visitor{
+public class TextGenerationVisitor implements Visitor {
     private String generatedText = "";
+    private int stepCounter = 1;  // Główny licznik kroków
+    private String prefix = "";  // Prefiks dla numeracji zagnieżdżonej
 
-    public String getGeneratedText(){
+    public String getGeneratedText() {
         return generatedText;
     }
 
     @Override
-    public void visitScenario(Scenario scenario){
-        int i = 1;
+    public void visitScenario(Scenario scenario) {
         for (Instruction instruction : scenario.getInstructions()){
-            if (instruction instanceof Action){
-                System.out.println(i + ". " + ((Action) instruction).getText());
-                i++;
+            if (instruction instanceof Step){
+                generatedText += stepCounter + ". " + ((Step) instruction).getText() + "\n";
+                prefix = stepCounter + ".";
+                ((Step) instruction).accept(this);
             }
             else {
-                System.out.println(((Step) instruction).getText());
+                generatedText += stepCounter + ". " + ((Action) instruction).getText() + "\n";
             }
+            stepCounter++;
         }
     }
 
     @Override
-    public void visitStep(Step step){
+    public void visitStep(Step step) {
+        int thisStep = 1;
+        for (Instruction instruction : step.getNextInstructions()){
+            if (instruction instanceof Action){
+                generatedText += prefix + thisStep + ". " + ((Action) instruction).getText() + "\n";
+            }
+            else {
+                generatedText += prefix + thisStep + ". " + ((Step) instruction).getText() + "\n";
+                prefix += thisStep + ".";
+                ((Step) instruction).accept(this);
+            }
+            thisStep++;
+        }
+
     }
 
     @Override
-    public void visitAction(Action action){
+    public void visitAction(Action action) {
     }
 }
+
