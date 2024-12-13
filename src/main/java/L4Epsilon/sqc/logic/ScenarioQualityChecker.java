@@ -4,6 +4,9 @@ import L4Epsilon.sqc.logic.elements.Action;
 import L4Epsilon.sqc.logic.elements.Instruction;
 import L4Epsilon.sqc.logic.elements.Scenario;
 import L4Epsilon.sqc.logic.elements.Step;
+import L4Epsilon.sqc.logic.visitors.CountingVisitor;
+import L4Epsilon.sqc.logic.visitors.KeyWordAnalysisVisitor;
+import L4Epsilon.sqc.logic.visitors.TextGenerationVisitor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -113,4 +116,21 @@ public class ScenarioQualityChecker {
         }
     }
 
+    public void generateJsonOutput(Scenario scenario, CountingVisitor countingVisitor,
+                                   KeyWordAnalysisVisitor keyWordVisitor, TextGenerationVisitor textVisitor,
+                                   String outputFilePath) {
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("title", scenario.getTitle());
+        resultJson.put("generatedText", textVisitor.getGeneratedText());
+        resultJson.put("stepsCount", countingVisitor.getStepsCount());
+        resultJson.put("keyWordOccurrences", keyWordVisitor.getOccurrenceCount());
+
+        try {
+            Files.write(Paths.get(outputFilePath), resultJson.toString(4).getBytes());
+            System.out.println("Wynik zapisano do pliku: " + outputFilePath);
+        } catch (IOException e) {
+            System.err.println("Błąd podczas zapisywania pliku JSON: " + e.getMessage());
+        }
+
+    }
 }
