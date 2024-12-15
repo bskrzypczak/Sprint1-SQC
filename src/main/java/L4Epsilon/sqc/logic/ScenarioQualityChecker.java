@@ -64,10 +64,10 @@ public class ScenarioQualityChecker {
 
 
     /**
-     * Transformuje JSONObject na model obiektowy Scenario
+     * Parsuje liste krokow i zwraca liste instrukcji
      *
      * @param stepsJSON JSONArray z krokami
-     * @return Scenario jako obiekt Scenario
+     * @return instructions jako lista instrukcji
      */
     private List<Instruction> parseInstructions(JSONArray stepsJSON) {
         List<Instruction> instructions = new ArrayList<>();
@@ -91,6 +91,12 @@ public class ScenarioQualityChecker {
         return instructions;
     }
 
+
+    /**
+     * Transformuje JSONObject na model obiektowy Scenario
+     *
+     * @return transformJSONToModel jako scenariusz .json
+     */
     public Scenario getReady(){
         JSONObject scenarioJSON = parseJSON(this.path);
         return transformJSONToModel(scenarioJSON);
@@ -98,7 +104,7 @@ public class ScenarioQualityChecker {
 
 
     /**
-     * Wypisuje kazdy tekst w scenariuszu
+     * Wypisuje kazda instrukcje w scenariuszu
      *
      * @param instructions lista Instrukcji scenariusza
      */
@@ -117,6 +123,15 @@ public class ScenarioQualityChecker {
         }
     }
 
+    /**
+     * Generuje gotowy scenariusz w pliku wyjsciowym z mozliwoscia pominiecia wybranych parametrow
+     *
+     * @param scenario scenariusz z pliku wejsciowego
+     * @param countingVisitor zlicza liczbe krokow w scenariuszu
+     * @param keyWordVisitor zlicza liczbe slow kluczowych w scenariuszu
+     * @param textVisitor generuje tekst do scenariusza wyjsciowego
+     * @param outputFilePath sciezka do pliku z rozszerzeniem .json w ktorym bedzie wypisany wynik
+     */
     public void generateJsonOutput(Scenario scenario, CountingVisitor countingVisitor,
                                    KeyWordAnalysisVisitor keyWordVisitor, TextGenerationVisitor textVisitor,
                                    String outputFilePath) {
@@ -183,6 +198,12 @@ public class ScenarioQualityChecker {
 
     }
 
+    /**
+     * Generuje sciezke do pliku wyjsciowego
+     *
+     * @param inputPath sciezka do pliku wyjsciowego
+     * @return sciezka do pliku wyjsciowego z rozszerzeniem .json
+     */
     public static String generateOutputPath(String inputPath) {
         Path inputFilePath = Paths.get(inputPath);
         String fileNameWithoutExtension = inputFilePath.getFileName().toString().replaceFirst("[.][^.]+$", "");
