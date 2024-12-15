@@ -21,7 +21,7 @@ public class ScenarioQualityCheckerApplication {
         TextGenerationVisitor textVisitor = new TextGenerationVisitor();
 
         String inputPath = "testy/test1.json";
-        String outputPath = "ScenarioQualityChecker_output.json";
+        String outputPath = "output/ScenarioQualityChecker_output.json";
         ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
         Scenario scenario = checker.getReady();
 
