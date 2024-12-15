@@ -31,3 +31,13 @@ Aktor systemowy: System
         - System informuje o poprawnym dodaniu egzemplarza i prezentuje zaktualizowaną listę egzemplarzy.
 - Bibliotekarz zatwierdza dodanie książki.
 - System informuje o poprawnym dodaniu książki.
+
+# Obsługa REST na lokalnym serwerze:
+
+W ramach działania naszej aplikacji, użytkownik może na serwerze zobaczyć wyniki wykonania poszczególnych funkcji na interesującym go scenariuszu. Dostępne funkcje to:
+- wyświetlenie ponumerowanego scenariusza                            http://localhost:8080/scenario/text?fileName=test4
+- wyświetlenie liczby kroków w scenariuszu                           http://localhost:8080/scenario/number-of-steps?fileName=test4
+- wyświetlenie liczby kroków zaczynających się od słów kluczowych    http://localhost:8080/scenario/key-words?fileName=test4
+- wyświetlenie wszystkich powyższych informacji jednocześnie         http://localhost:8080/scenario/all-info?fileName=test4
+
+Podane linki odnoszą się do przykładowego scenariusza znajdującego się w pliku test4.json. W przypadku chęci odczytania informacji z innego pliku wystarczy zmienić w linku "test4" na nazwę naszego pliku w formacie JSON (nie nalezy podawac rozszerzenia). 
