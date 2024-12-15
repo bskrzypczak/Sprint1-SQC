@@ -42,13 +42,6 @@ public class KeyWordAnalysisVisitor implements Visitor{
         }
     }
 
-
-    /**
-     * zajebista metoda
-     * pozdrawiam z rodzinka
-     * jas is stick
-     *
-     */
     @Override
     public void visitAction(Action action){}
 }

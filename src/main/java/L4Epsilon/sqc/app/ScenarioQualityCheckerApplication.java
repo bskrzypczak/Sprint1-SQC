@@ -6,7 +6,10 @@ import L4Epsilon.sqc.logic.visitors.CountingVisitor;
 
 import L4Epsilon.sqc.logic.visitors.KeyWordAnalysisVisitor;
 import L4Epsilon.sqc.logic.visitors.TextGenerationVisitor;
+import L4Epsilon.sqc.rest.ScenarioQualityCheckerController;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 
 @SpringBootApplication(scanBasePackages = {"L4Epsilon.sqc.rest"})
@@ -17,7 +20,7 @@ public class ScenarioQualityCheckerApplication {
         KeyWordAnalysisVisitor keyWordVisitor = new KeyWordAnalysisVisitor();
         TextGenerationVisitor textVisitor = new TextGenerationVisitor();
 
-        String inputPath = "testy/test4.json";
+        String inputPath = "testy/test1.json";
         String outputPath = "ScenarioQualityChecker_output.json";
         ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
         Scenario scenario = checker.getReady();
@@ -33,7 +36,7 @@ public class ScenarioQualityCheckerApplication {
 
         checker.generateJsonOutput(scenario, countingVisitor, keyWordVisitor, textVisitor, outputPath);
 
-        //SpringApplication.run(ScenarioQualityCheckerApplication.class, args);
+        SpringApplication.run(ScenarioQualityCheckerApplication.class, args);
     }
 
 

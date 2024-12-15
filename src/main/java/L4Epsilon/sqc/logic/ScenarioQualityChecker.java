@@ -107,7 +107,7 @@ public class ScenarioQualityChecker {
                 Step step = (Step) instruction;
                 System.out.println("Step: " + step.getText());
                 if (step.getNextInstructions() != null) {
-                    printInstructions(step.getNextInstructions()); // Rekurencja dla zagnieżdżonych instrukcji
+                    printInstructions(step.getNextInstructions());
                 }
             } else if (instruction instanceof Action) {
                 Action action = (Action) instruction;
