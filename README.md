@@ -34,6 +34,15 @@ Aktor systemowy: System
 
 # Obsługa REST na lokalnym serwerze:
 
+## GUI
+Aplikacja ScenarioQualityChecker oferuje analitykom również dostęp do przyjaznego użytkownikowi interfejsu graficznego, pod adresem http://localhost:8080 
+ 
+ Z poziomu GUI użytkownik na możliwość podania nazwy pliku, który należy przeanalizować i za pomocą checkboxów wybiera jakie informacje mają zostać wyświetlone. Po wygenerowaniu wyniku aplikacja oferuje możliwość pobrania wygenerowanych danych w formacie JSON.
+![image](https://github.com/user-attachments/assets/6d2b362b-29b2-448f-abcb-3ccc5de1a751)
+
+
+## Obsługa funkcji bez użycia GUI
+
 W ramach działania naszej aplikacji, użytkownik może na serwerze zobaczyć wyniki wykonania poszczególnych funkcji na interesującym go scenariuszu. Dostępne funkcje to:
 - wyświetlenie ponumerowanego scenariusza                            http://localhost:8080/scenario/text?fileName=test4
 - wyświetlenie liczby kroków w scenariuszu                           http://localhost:8080/scenario/number-of-steps?fileName=test4
