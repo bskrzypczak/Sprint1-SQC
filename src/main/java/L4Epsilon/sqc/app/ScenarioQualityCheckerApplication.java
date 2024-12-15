@@ -11,6 +11,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import static L4Epsilon.sqc.logic.ScenarioQualityChecker.generateOutputPath;
+
 
 @SpringBootApplication(scanBasePackages = {"L4Epsilon.sqc.rest"})
 public class ScenarioQualityCheckerApplication {
@@ -21,7 +23,7 @@ public class ScenarioQualityCheckerApplication {
         TextGenerationVisitor textVisitor = new TextGenerationVisitor();
 
         String inputPath = "testy/test1.json";
-        String outputPath = "output/ScenarioQualityChecker_output.json";
+        String outputPath = generateOutputPath(inputPath);
         ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
         Scenario scenario = checker.getReady();
 

@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,6 +152,12 @@ public class ScenarioQualityChecker {
             System.err.println("Błąd podczas zapisywania pliku JSON: " + e.getMessage());
         }
 
+    }
+
+    public static String generateOutputPath(String inputPath) {
+        Path inputFilePath = Paths.get(inputPath);
+        String fileNameWithoutExtension = inputFilePath.getFileName().toString().replaceFirst("[.][^.]+$", "");
+        return "output/" + fileNameWithoutExtension + "_output.json";
     }
 
 
