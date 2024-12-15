@@ -120,33 +120,62 @@ public class ScenarioQualityChecker {
     public void generateJsonOutput(Scenario scenario, CountingVisitor countingVisitor,
                                    KeyWordAnalysisVisitor keyWordVisitor, TextGenerationVisitor textVisitor,
                                    String outputFilePath) {
-        String[] generatedTextLines = textVisitor.getGeneratedText().split("\n");
 
-        StringBuilder generatedTextArray = new StringBuilder();
+        StringBuilder jsonBuilder = new StringBuilder();
+        jsonBuilder.append("{\n");
 
-        generatedTextArray.append("[\n");
-        for (int i = 0; i < generatedTextLines.length; i++) {
 
-            generatedTextArray.append("        \"");
-            generatedTextArray.append(generatedTextLines[i].trim().replace("\"", "\\\""));
-            generatedTextArray.append("\"");
-
-            if (i < generatedTextLines.length - 1) {
-                generatedTextArray.append(",");
-            }
-            generatedTextArray.append("\n");
+        if (scenario != null) {
+            jsonBuilder.append("    \"title\": \"")
+                    .append(scenario.getTitle().replace("\"", "\\\""))
+                    .append("\",\n");
         }
-        generatedTextArray.append("    ]");
 
-        String jsonString = "{\n" +
-                "    \"title\": \"" + scenario.getTitle().replace("\"", "\\\"") + "\",\n" +
-                "    \"generatedText\": " + generatedTextArray + ",\n" +
-                "    \"stepsCount\": " + countingVisitor.getStepsCount() + ",\n" +
-                "    \"keyWordOccurrences\": " + keyWordVisitor.getOccurrenceCount() + "\n" +
-                "}";
+
+        if (textVisitor != null) {
+            String[] generatedTextLines = textVisitor.getGeneratedText().split("\n");
+            StringBuilder generatedTextArray = new StringBuilder("[\n");
+
+            for (int i = 0; i < generatedTextLines.length; i++) {
+                generatedTextArray.append("        \"")
+                        .append(generatedTextLines[i].trim().replace("\"", "\\\""))
+                        .append("\"");
+
+                if (i < generatedTextLines.length - 1) {
+                    generatedTextArray.append(",");
+                }
+                generatedTextArray.append("\n");
+            }
+            generatedTextArray.append("    ]");
+
+            jsonBuilder.append("    \"generatedText\": ")
+                    .append(generatedTextArray)
+                    .append(",\n");
+        }
+
+
+        if (countingVisitor != null) {
+            jsonBuilder.append("    \"stepsCount\": ")
+                    .append(countingVisitor.getStepsCount())
+                    .append(",\n");
+        }
+
+
+        if (keyWordVisitor != null) {
+            jsonBuilder.append("    \"keyWordOccurrences\": ")
+                    .append(keyWordVisitor.getOccurrenceCount())
+                    .append(",\n");
+        }
+
+        if (jsonBuilder.charAt(jsonBuilder.length() - 2) == ',') {
+            jsonBuilder.deleteCharAt(jsonBuilder.length() - 2);
+        }
+
+        jsonBuilder.append("}\n");
 
         try {
-            Files.write(Paths.get(outputFilePath), jsonString.getBytes());
+            Files.write(Paths.get(outputFilePath), jsonBuilder.toString().getBytes());
+            Files.write(Paths.get(outputFilePath), jsonBuilder.toString().getBytes());
             System.out.println("Wynik zapisano do pliku: " + outputFilePath);
         } catch (IOException e) {
             System.err.println("Błąd podczas zapisywania pliku JSON: " + e.getMessage());

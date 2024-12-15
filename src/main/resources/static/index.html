@@ -67,6 +67,7 @@
 
         .results {
             margin-top: 20px;
+            margin-bottom: 20px;
             padding: 10px;
             background: #f4f4f4;
             border: 1px solid #ddd;
@@ -108,10 +109,75 @@
     </div>
 
     <button onclick="fetchSelectedData()">Pokaż wynik</button>
+
     <div id="results" class="results"></div>
+    <button onclick="downloadJson()">Pobierz output w JSON</button>
+
 </div>
 
 <script>
+    async function downloadJson() {
+        const fileName = document.getElementById('fileName').value;
+
+        if (!fileName) {
+            alert("Proszę wprowadzić nazwę pliku!");
+            return;
+        }
+
+        const includePlan = document.getElementById('getSteps').checked;
+        const includeStepsCount = document.getElementById('getStepCount').checked;
+        const includeKeyWordOccurrences = document.getElementById('getKeyWordsCount').checked;
+
+
+        try {
+            const generateUrl = `/scenario/generate-output?fileName=${fileName}&includePlan=${includePlan}&includeStepsCount=${includeStepsCount}&includeKeyWordOccurrences=${includeKeyWordOccurrences}`;
+            const generateResponse = await fetch(generateUrl, { method: 'GET' });
+
+            if (!generateResponse.ok) {
+                throw new Error("Błąd podczas generowania pliku JSON.");
+            }
+        } catch (error) {
+            console.error("Błąd podczas generowania JSON:", error);
+            alert("Nie udało się wygenerować JSON: " + error.message);
+            return;
+        }
+
+
+        try {
+            const downloadUrl = `/scenario/download?fileName=${fileName}`;
+            const link = document.createElement("a");
+            link.href = downloadUrl;
+            link.download = `${fileName}_output.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error("Błąd podczas pobierania pliku JSON:", error);
+            alert("Nie udało się pobrać pliku JSON.");
+        }
+    }
+
+    function generateJson() {
+        const fileName = document.getElementById('fileName').value;
+
+        if (!fileName) {
+            alert("Proszę wprowadzić nazwę pliku!");
+            return;
+        }
+
+        const includePlan = document.getElementById('getSteps').checked; // Zmieniono na `getSteps`
+        const includeStepsCount = document.getElementById('getStepCount').checked; // Zmieniono na `getStepCount`
+        const includeKeyWordOccurrences = document.getElementById('getKeyWordsCount').checked; // Zmieniono na `getKeyWordsCount`
+
+        const url = `/scenario/generate-output?fileName=${fileName}&includePlan=${includePlan}&includeStepsCount=${includeStepsCount}&includeKeyWordOccurrences=${includeKeyWordOccurrences}`;
+
+        fetch(url, { method: 'GET' })
+            .catch(error => {
+                console.error("Błąd:", error);
+                alert("Wystąpił błąd podczas generowania pliku JSON.");
+            });
+    }
+
     function toggleAllCheckboxes() {
 
         const selectAllChecked = document.getElementById('selectAll').checked;
@@ -123,7 +189,6 @@
 
     async function fetchSelectedData() {
         const fileName = document.getElementById('fileName').value;
-
 
         const getSteps = document.getElementById('getSteps').checked;
         const getStepCount = document.getElementById('getStepCount').checked;
@@ -138,6 +203,21 @@
             document.getElementById('results').innerHTML = `<p class="error">Proszę wybrać przynajmniej jedną opcję!</p>`;
             return;
         }
+
+
+        try {
+            const generateUrl = `/scenario/generate-output?fileName=${fileName}&includePlan=${getSteps}&includeStepsCount=${getStepCount}&includeKeyWordOccurrences=${getKeyWordsCount}`;
+            const generateResponse = await fetch(generateUrl, { method: 'GET' });
+
+            if (!generateResponse.ok) {
+                throw new Error("Błąd podczas generowania JSON na serwerze.");
+            }
+        } catch (error) {
+            console.error("Błąd podczas generowania JSON:", error);
+            document.getElementById('results').innerHTML = `<p class="error">Nie udało się wygenerować JSON: ${error.message}</p>`;
+            return;
+        }
+
 
         let resultsHtml = `<h2>Wyniki dla pliku "${fileName}":</h2>`;
 
@@ -161,10 +241,9 @@
             }
 
             document.getElementById('results').innerHTML = resultsHtml;
-
         } catch (error) {
-            console.error("Błąd:", error);
-            document.getElementById('results').innerHTML = `<p class="error">Błąd podczas pobierania danych: ${error.message}</p>`;
+            console.error("Błąd podczas pobierania wyników:", error);
+            document.getElementById('results').innerHTML = `<p class="error">Błąd podczas pobierania wyników: ${error.message}</p>`;
         }
     }
 </script>

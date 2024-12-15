@@ -10,6 +10,40 @@ import org.springframework.stereotype.Service;
 @Service
 public class ScenarioService {
 
+    public void generateCustomOutput(String fileName, boolean includePlan, boolean includeStepsCount, boolean includeKeyWordOccurrences) {
+        String inputPath = "testy/" + fileName + ".json";
+        String outputPath = "output/" + fileName + "_output.json";
+
+        ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
+        Scenario scenario = checker.getReady();
+
+        CountingVisitor countingVisitor = null;
+        KeyWordAnalysisVisitor keyWordVisitor = null;
+        TextGenerationVisitor textVisitor = null;
+
+        if (includeStepsCount) {
+            countingVisitor = new CountingVisitor();
+            scenario.accept(countingVisitor);
+        }
+        if (includeKeyWordOccurrences) {
+            keyWordVisitor = new KeyWordAnalysisVisitor();
+            scenario.accept(keyWordVisitor);
+        }
+        if (includePlan) {
+            textVisitor = new TextGenerationVisitor();
+            scenario.accept(textVisitor);
+        }
+
+
+        checker.generateJsonOutput(
+                scenario,
+                countingVisitor,
+                keyWordVisitor,
+                textVisitor,
+                outputPath
+        );
+    }
+
     public String getTitle(String fileName){
         String path = "testy/" + fileName + ".json";
         ScenarioQualityChecker checker = new ScenarioQualityChecker(path);
