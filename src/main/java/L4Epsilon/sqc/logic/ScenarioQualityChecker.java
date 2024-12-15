@@ -119,14 +119,33 @@ public class ScenarioQualityChecker {
     public void generateJsonOutput(Scenario scenario, CountingVisitor countingVisitor,
                                    KeyWordAnalysisVisitor keyWordVisitor, TextGenerationVisitor textVisitor,
                                    String outputFilePath) {
-        JSONObject resultJson = new JSONObject();
-        resultJson.put("title", scenario.getTitle());
-        resultJson.put("generatedText", textVisitor.getGeneratedText());
-        resultJson.put("stepsCount", countingVisitor.getStepsCount());
-        resultJson.put("keyWordOccurrences", keyWordVisitor.getOccurrenceCount());
+        String[] generatedTextLines = textVisitor.getGeneratedText().split("\n");
+
+        StringBuilder generatedTextArray = new StringBuilder();
+
+        generatedTextArray.append("[\n");
+        for (int i = 0; i < generatedTextLines.length; i++) {
+
+            generatedTextArray.append("        \"");
+            generatedTextArray.append(generatedTextLines[i].trim().replace("\"", "\\\""));
+            generatedTextArray.append("\"");
+
+            if (i < generatedTextLines.length - 1) {
+                generatedTextArray.append(",");
+            }
+            generatedTextArray.append("\n");
+        }
+        generatedTextArray.append("    ]");
+
+        String jsonString = "{\n" +
+                "    \"title\": \"" + scenario.getTitle().replace("\"", "\\\"") + "\",\n" +
+                "    \"generatedText\": " + generatedTextArray + ",\n" +
+                "    \"stepsCount\": " + countingVisitor.getStepsCount() + ",\n" +
+                "    \"keyWordOccurrences\": " + keyWordVisitor.getOccurrenceCount() + "\n" +
+                "}";
 
         try {
-            Files.write(Paths.get(outputFilePath), resultJson.toString(4).getBytes());
+            Files.write(Paths.get(outputFilePath), jsonString.getBytes());
             System.out.println("Wynik zapisano do pliku: " + outputFilePath);
         } catch (IOException e) {
             System.err.println("Błąd podczas zapisywania pliku JSON: " + e.getMessage());
