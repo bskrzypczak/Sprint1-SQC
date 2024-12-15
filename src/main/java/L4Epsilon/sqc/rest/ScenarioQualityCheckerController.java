@@ -21,6 +21,11 @@ public class ScenarioQualityCheckerController {
         this.service = service;
     }
 
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/index.html";
+    }
+
     @GetMapping("/all-info")
     public String getEverything(@RequestParam String fileName){
         logger.info("Pobieranie wszystkich informacji dla scenariusza: " + fileName);
@@ -48,9 +53,9 @@ public class ScenarioQualityCheckerController {
     @GetMapping("/number-of-steps")
     public String getStepsCount(@RequestParam String fileName){
         logger.info("Pobieranie liczby krokow dla scenariusza: " + fileName);
-        String rawText = service.getTitle(fileName);
-        rawText += "<br><br>";
-        rawText += "Liczba kroków w scenariuszu: ";
+        //String rawText = service.getTitle(fileName);
+       // rawText += "<br><br>";
+        String rawText = "Liczba kroków w scenariuszu: ";
         rawText += service.getStepsCount(fileName);
         return rawText;
     }
@@ -58,9 +63,9 @@ public class ScenarioQualityCheckerController {
     @GetMapping("/key-words")
     public String getKeyWords(@RequestParam String fileName){
         logger.info("Pobieranie liczby krokow ze slowami kluczowymi dla scenariusza: " + fileName);
-        String rawText = service.getTitle(fileName);
-        rawText += "<br><br>";
-        rawText += "Liczba kroków w scenariuszu zaczynających się na słowo kluczowe: ";
+       // String rawText = service.getTitle(fileName);
+       // rawText += "<br><br>";
+        String rawText = "Liczba kroków w scenariuszu zaczynających się na słowo kluczowe: ";
         rawText += service.getKeyWordSteps(fileName);
         return rawText;
     }

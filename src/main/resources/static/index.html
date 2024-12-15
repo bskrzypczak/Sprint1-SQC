@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scenario Quality Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2dbd3;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"] {
+            width: 97%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .checkbox-group {
+            margin: 10px 0;
+        }
+
+        .checkbox-group label {
+            display: block;
+            margin: 5px 0;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #FA8072;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .results {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .error {
+            color: red;
+        }
+
+         h2 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Scenario Quality Checker</h1>
+    <h2>Wprowadź nazwę pliku JSON (bez rozszerzenia):</h2>
+    <label for="fileName">
+        <input type="text" id="fileName" placeholder="Np. test1">
+    </label>
+    <div class="checkbox-group">
+        <h2>Wybierz informacje, które chcesz otrzymać:</h2>
+        <label>
+            <input type="checkbox" id="selectAll" onclick="toggleAllCheckboxes()"> Zaznacz wszystkie
+        </label>
+        <label>
+            <input type="checkbox" id="getSteps"> Lista kroków
+        </label>
+        <label>
+            <input type="checkbox" id="getStepCount"> Liczba kroków
+        </label>
+        <label>
+            <input type="checkbox" id="getKeyWordsCount"> Liczba słów kluczowych
+        </label>
+    </div>
+
+    <button onclick="fetchSelectedData()">Pokaż wynik</button>
+    <div id="results" class="results"></div>
+</div>
+
+<script>
+    function toggleAllCheckboxes() {
+
+        const selectAllChecked = document.getElementById('selectAll').checked;
+
+        document.getElementById('getSteps').checked = selectAllChecked;
+        document.getElementById('getStepCount').checked = selectAllChecked;
+        document.getElementById('getKeyWordsCount').checked = selectAllChecked;
+    }
+
+    async function fetchSelectedData() {
+        const fileName = document.getElementById('fileName').value;
+
+
+        const getSteps = document.getElementById('getSteps').checked;
+        const getStepCount = document.getElementById('getStepCount').checked;
+        const getKeyWordsCount = document.getElementById('getKeyWordsCount').checked;
+
+        if (!fileName) {
+            document.getElementById('results').innerHTML = `<p class="error">Proszę wprowadzić nazwę pliku!</p>`;
+            return;
+        }
+
+        if (!getSteps && !getStepCount && !getKeyWordsCount) {
+            document.getElementById('results').innerHTML = `<p class="error">Proszę wybrać przynajmniej jedną opcję!</p>`;
+            return;
+        }
+
+        let resultsHtml = `<h2>Wyniki dla pliku "${fileName}":</h2>`;
+
+        try {
+            if (getSteps) {
+                const stepsResponse = await fetch(`/scenario/text?fileName=${fileName}`);
+                const stepsData = await stepsResponse.text();
+                resultsHtml += `<div>${stepsData}</div>`;
+            }
+
+            if (getStepCount) {
+                const stepCountResponse = await fetch(`/scenario/number-of-steps?fileName=${fileName}`);
+                const stepCountData = await stepCountResponse.text();
+                resultsHtml += `<p>${stepCountData}</p>`;
+            }
+
+            if (getKeyWordsCount) {
+                const KeyWordsCountResponse = await fetch(`/scenario/key-words?fileName=${fileName}`);
+                const KeyWordsCountData = await KeyWordsCountResponse.text();
+                resultsHtml += `<p>${KeyWordsCountData}</p>`;
+            }
+
+            document.getElementById('results').innerHTML = resultsHtml;
+
+        } catch (error) {
+            console.error("Błąd:", error);
+            document.getElementById('results').innerHTML = `<p class="error">Błąd podczas pobierania danych: ${error.message}</p>`;
+        }
+    }
+</script>
+</body>
+</html>
