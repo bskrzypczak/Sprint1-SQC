@@ -157,26 +157,6 @@
         }
     }
 
-    function generateJson() {
-        const fileName = document.getElementById('fileName').value;
-
-        if (!fileName) {
-            alert("Proszę wprowadzić nazwę pliku!");
-            return;
-        }
-
-        const includePlan = document.getElementById('getSteps').checked; // Zmieniono na `getSteps`
-        const includeStepsCount = document.getElementById('getStepCount').checked; // Zmieniono na `getStepCount`
-        const includeKeyWordOccurrences = document.getElementById('getKeyWordsCount').checked; // Zmieniono na `getKeyWordsCount`
-
-        const url = `/scenario/generate-output?fileName=${fileName}&includePlan=${includePlan}&includeStepsCount=${includeStepsCount}&includeKeyWordOccurrences=${includeKeyWordOccurrences}`;
-
-        fetch(url, { method: 'GET' })
-            .catch(error => {
-                console.error("Błąd:", error);
-                alert("Wystąpił błąd podczas generowania pliku JSON.");
-            });
-    }
 
     function toggleAllCheckboxes() {
 
