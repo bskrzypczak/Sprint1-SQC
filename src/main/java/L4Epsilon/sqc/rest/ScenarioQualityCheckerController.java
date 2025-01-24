@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.nio.file.Files;
@@ -108,6 +109,24 @@ public class ScenarioQualityCheckerController {
                     .body(resource);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+        try {
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body("Plik jest pusty!");
+            }
+
+
+            String uploadDir = "uploaded/";
+            Path filePath = Paths.get(uploadDir + file.getOriginalFilename());
+            Files.createDirectories(filePath.getParent());
+            Files.write(filePath, file.getBytes());
+
+            return ResponseEntity.ok("Plik został przesłany pomyślnie.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd podczas zapisywania pliku: " + e.getMessage());
         }
     }
 }

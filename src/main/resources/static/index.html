@@ -88,10 +88,14 @@
 <body>
 <div class="container">
     <h1>Scenario Quality Checker</h1>
-    <h2>Wprowadź nazwę pliku JSON (bez rozszerzenia):</h2>
+    <h2>Wprowadź nazwę pliku JSON (bez rozszerzenia) lub załaduj plik:</h2>
     <label for="fileName">
         <input type="text" id="fileName" placeholder="Np. test1">
     </label>
+    <label for="fileInput">
+        <input type="file" id="fileInput" accept=".json">
+    </label>
+    <button onclick="uploadFile()">Prześlij plik</button>
     <div class="checkbox-group">
         <h2>Wybierz informacje, które chcesz otrzymać:</h2>
         <label>
@@ -107,13 +111,11 @@
             <input type="checkbox" id="getKeyWordsCount"> Liczba słów kluczowych
         </label>
     </div>
-
     <button onclick="fetchSelectedData()">Pokaż wynik</button>
-
     <div id="results" class="results"></div>
     <button onclick="downloadJson()">Pobierz output w JSON</button>
-
 </div>
+
 
 <script>
     async function downloadJson() {
@@ -156,6 +158,36 @@
             alert("Nie udało się pobrać pliku JSON.");
         }
     }
+
+    async function uploadFile() {
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert("Prosze wybrać plik JSON!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch('/scenario/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                alert("Plik został przesłany pomyślnie.");
+            } else {
+                throw new Error("Nie udało się przesłać pliku.");
+            }
+        } catch (error) {
+            console.error("Błąd podczas przesyłania pliku:", error);
+            alert("Wystąpił błąd podczas przesyłania pliku.");
+        }
+    }
+
 
 
     function toggleAllCheckboxes() {

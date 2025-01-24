@@ -7,11 +7,27 @@ import L4Epsilon.sqc.logic.visitors.KeyWordAnalysisVisitor;
 import L4Epsilon.sqc.logic.visitors.TextGenerationVisitor;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 @Service
 public class ScenarioService {
 
+    private String getFilePath(String fileName) {
+        String uploadedPath = "uploaded/" + fileName + ".json";
+        String testPath = "testy/" + fileName + ".json";
+
+        if (Files.exists(Paths.get(uploadedPath))) {
+            return uploadedPath;
+        } else if (Files.exists(Paths.get(testPath))) {
+            return testPath;
+        } else {
+            throw new IllegalArgumentException("Plik o nazwie '" + fileName + "' nie istnieje.");
+        }
+    }
+
     public void generateCustomOutput(String fileName, boolean includePlan, boolean includeStepsCount, boolean includeKeyWordOccurrences) {
-        String inputPath = "testy/" + fileName + ".json";
+        String inputPath = getFilePath(fileName);
         String outputPath = "output/" + fileName + "_output.json";
 
         ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
@@ -45,16 +61,16 @@ public class ScenarioService {
     }
 
     public String getTitle(String fileName){
-        String path = "testy/" + fileName + ".json";
-        ScenarioQualityChecker checker = new ScenarioQualityChecker(path);
+        String inputPath = getFilePath(fileName);
+        ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
         Scenario scenario = checker.getReady();
         return scenario.getTitle();
     }
 
     public String getPlan(String fileName){
         TextGenerationVisitor textVisitor = new TextGenerationVisitor();
-        String path = "testy/" + fileName + ".json";
-        ScenarioQualityChecker checker = new ScenarioQualityChecker(path);
+        String inputPath = getFilePath(fileName);
+        ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
         Scenario scenario = checker.getReady();
         scenario.accept(textVisitor);
         return textVisitor.getGeneratedText();
@@ -62,8 +78,8 @@ public class ScenarioService {
 
     public int getStepsCount(String fileName){
         CountingVisitor countingVisitor = new CountingVisitor();
-        String path = "testy/" + fileName + ".json";
-        ScenarioQualityChecker checker = new ScenarioQualityChecker(path);
+        String inputPath = getFilePath(fileName);
+        ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
         Scenario scenario = checker.getReady();
         scenario.accept(countingVisitor);
 
@@ -72,8 +88,8 @@ public class ScenarioService {
 
     public int getKeyWordSteps(String fileName){
         KeyWordAnalysisVisitor keyVisitor = new KeyWordAnalysisVisitor();
-        String path = "testy/" + fileName + ".json";
-        ScenarioQualityChecker checker = new ScenarioQualityChecker(path);
+        String inputPath = getFilePath(fileName);
+        ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
         Scenario scenario = checker.getReady();
         scenario.accept(keyVisitor);
 
