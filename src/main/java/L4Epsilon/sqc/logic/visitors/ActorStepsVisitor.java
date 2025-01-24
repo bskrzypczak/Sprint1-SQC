@@ -92,6 +92,7 @@ public class ActorStepsVisitor implements Visitor{
 
     @Override
     public void visitAction(Action action) {
+        //pali jeździ ale zapomnialem pull requesta
     }
 
 
