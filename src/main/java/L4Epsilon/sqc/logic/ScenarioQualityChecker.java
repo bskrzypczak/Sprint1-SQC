@@ -201,7 +201,7 @@ public class ScenarioQualityChecker {
                     .append(",\n");
         }
 
-        if (textVisitor != null) {
+        if (subVisitor != null) {
             String[] generatedTextLines = subVisitor.getSubscenarioText().split("\n");
             StringBuilder generatedTextArray = new StringBuilder("[\n");
 

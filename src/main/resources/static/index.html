@@ -116,6 +116,10 @@
         <label>
             <input type="checkbox" id="getSubScenario"> Podscenariusz
         </label>
+        <label for="depthInput">
+            Głębokość (depth):
+            <input type="number" id="depthInput" min="1" placeholder="Podaj głębokość (np. 2)">
+        </label>
     </div>
     <button onclick="fetchSelectedData()">Pokaż wynik</button>
     <div id="results" class="results"></div>
@@ -125,47 +129,46 @@
 
 <script>
     async function downloadJson() {
-        const fileName = document.getElementById('fileName').value;
+    const fileName = document.getElementById('fileName').value;
+    const depth = document.getElementById('depthInput').value;
 
-        if (!fileName) {
-            alert("Proszę wprowadzić nazwę pliku!");
-            return;
-        }
-
-        const includePlan = document.getElementById('getSteps').checked;
-        const includeStepsCount = document.getElementById('getStepCount').checked;
-        const includeKeyWordOccurrences = document.getElementById('getKeyWordsCount').checked;
-        const includeIncorrectSteps = document.getElementById('getWrongSteps').checked;
-        const includeSubSteps = document.getElementById('getSubScenario').checked;
-
-
-        try {
-            const generateUrl = `/scenario/generate-output?fileName=${fileName}&includePlan=${includePlan}&includeStepsCount=${includeStepsCount}&includeKeyWordOccurrences=${includeKeyWordOccurrences}&includeIncorrectSteps=${includeIncorrectSteps}&includeSubSteps=${includeSubSteps}`;
-            const generateResponse = await fetch(generateUrl, { method: 'GET' });
-
-            if (!generateResponse.ok) {
-                throw new Error("Błąd podczas generowania pliku JSON.");
-            }
-        } catch (error) {
-            console.error("Błąd podczas generowania JSON:", error);
-            alert("Nie udało się wygenerować JSON: " + error.message);
-            return;
-        }
-
-
-        try {
-            const downloadUrl = `/scenario/download?fileName=${fileName}`;
-            const link = document.createElement("a");
-            link.href = downloadUrl;
-            link.download = `${fileName}_output.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } catch (error) {
-            console.error("Błąd podczas pobierania pliku JSON:", error);
-            alert("Nie udało się pobrać pliku JSON.");
-        }
+    if (!fileName) {
+        alert("Proszę wprowadzić nazwę pliku!");
+        return;
     }
+
+    const includePlan = document.getElementById('getSteps').checked;
+    const includeStepsCount = document.getElementById('getStepCount').checked;
+    const includeKeyWordOccurrences = document.getElementById('getKeyWordsCount').checked;
+    const includeIncorrectSteps = document.getElementById('getWrongSteps').checked;
+    const includeSubSteps = document.getElementById('getSubScenario').checked;
+
+    try {
+        const generateUrl = `/scenario/generate-output?fileName=${fileName}&includePlan=${includePlan}&includeStepsCount=${includeStepsCount}&includeKeyWordOccurrences=${includeKeyWordOccurrences}&includeIncorrectSteps=${includeIncorrectSteps}&includeSubSteps=${includeSubSteps}&depth=${depth}`;
+        const generateResponse = await fetch(generateUrl, { method: 'GET' });
+
+        if (!generateResponse.ok) {
+            throw new Error("Błąd podczas generowania pliku JSON.");
+        }
+    } catch (error) {
+        console.error("Błąd podczas generowania JSON:", error);
+        alert("Nie udało się wygenerować JSON: " + error.message);
+        return;
+    }
+
+    try {
+        const downloadUrl = `/scenario/download?fileName=${fileName}&depth=${depth}`;
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.download = `${fileName}_output.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error) {
+        console.error("Błąd podczas pobierania pliku JSON:", error);
+        alert("Nie udało się pobrać pliku JSON.");
+    }
+}
 
     async function uploadFile() {
         const fileInput = document.getElementById('fileInput');
@@ -210,78 +213,71 @@
     }
 
     async function fetchSelectedData() {
-        const fileName = document.getElementById('fileName').value;
+    const fileName = document.getElementById('fileName').value;
+    const depth = document.getElementById('depthInput').value; // Pobierz wartość depth
 
-        const getSteps = document.getElementById('getSteps').checked;
-        const getStepCount = document.getElementById('getStepCount').checked;
-        const getKeyWordsCount = document.getElementById('getKeyWordsCount').checked;
-        const getWrongSteps = document.getElementById('getWrongSteps').checked;
-        const getSubScenario = document.getElementById('getSubScenario').checked;
+    const getSteps = document.getElementById('getSteps').checked;
+    const getStepCount = document.getElementById('getStepCount').checked;
+    const getKeyWordsCount = document.getElementById('getKeyWordsCount').checked;
+    const getWrongSteps = document.getElementById('getWrongSteps').checked;
+    const getSubScenario = document.getElementById('getSubScenario').checked;
 
-        if (!fileName) {
-            document.getElementById('results').innerHTML = `<p class="error">Proszę wprowadzić nazwę pliku!</p>`;
-            return;
+    if (!fileName) {
+        document.getElementById('results').innerHTML = `<p class="error">Proszę wprowadzić nazwę pliku!</p>`;
+        return;
+    }
+
+    if (!getSteps && !getStepCount && !getKeyWordsCount && !getWrongSteps && !getSubScenario) {
+        document.getElementById('results').innerHTML = `<p class="error">Proszę wybrać przynajmniej jedną opcję!</p>`;
+        return;
+    }
+
+    try {
+        const generateUrl = `/scenario/generate-output?fileName=${fileName}&includePlan=${getSteps}&includeStepsCount=${getStepCount}&includeKeyWordOccurrences=${getKeyWordsCount}&includeIncorrectSteps=${getWrongSteps}&includeSubSteps=${getSubScenario}&depth=${depth}`;
+        const generateResponse = await fetch(generateUrl, { method: 'GET' });
+
+        if (!generateResponse.ok) {
+            throw new Error("Błąd podczas generowania JSON na serwerze.");
         }
-
-        if (!getSteps && !getStepCount && !getKeyWordsCount&&!getWrongSteps&&!getSubScenario) {
-            document.getElementById('results').innerHTML = `<p class="error">Proszę wybrać przynajmniej jedną opcję!</p>`;
-            return;
-        }
-
-
-        try {
-            const generateUrl = `/scenario/generate-output?fileName=${fileName}&includePlan=${getSteps}&includeStepsCount=${getStepCount}&includeKeyWordOccurrences=${getKeyWordsCount}&includeIncorrectSteps=${getWrongSteps}&includeSubSteps=${getSubScenario}`;
-            const generateResponse = await fetch(generateUrl, { method: 'GET' });
-
-            if (!generateResponse.ok) {
-                throw new Error("Błąd podczas generowania JSON na serwerze.");
-            }
-        } catch (error) {
-            console.error("Błąd podczas generowania JSON:", error);
-            document.getElementById('results').innerHTML = `<p class="error">Nie udało się wygenerować JSON: ${error.message}</p>`;
-            return;
-        }
-
 
         let resultsHtml = `<h2>Wyniki dla pliku "${fileName}":</h2>`;
 
-        try {
-            if (getSteps) {
-                const stepsResponse = await fetch(`/scenario/text?fileName=${fileName}`);
-                const stepsData = await stepsResponse.text();
-                resultsHtml += `<div>${stepsData}</div>`;
-            }
-
-            if (getStepCount) {
-                const stepCountResponse = await fetch(`/scenario/number-of-steps?fileName=${fileName}`);
-                const stepCountData = await stepCountResponse.text();
-                resultsHtml += `<p>${stepCountData}</p>`;
-            }
-
-            if (getKeyWordsCount) {
-                const KeyWordsCountResponse = await fetch(`/scenario/key-words?fileName=${fileName}`);
-                const KeyWordsCountData = await KeyWordsCountResponse.text();
-                resultsHtml += `<p>${KeyWordsCountData}</p>`;
-            }
-
-            if (getWrongSteps) {
-                const WrongstepsResponse = await fetch(`/scenario/wrongSteps?fileName=${fileName}`);
-                const WrongstepsData = await WrongstepsResponse.text();
-                resultsHtml += `<div>${WrongstepsData}</div>`;
-            }
-            if (getSubScenario) {
-                const SubstepsResponse = await fetch(`/scenario/substeps?fileName=${fileName}`);
-                const SubstepsData = await SubstepsResponse.text();
-                resultsHtml += `<div>${SubstepsData}</div>`;
-            }
-
-
-            document.getElementById('results').innerHTML = resultsHtml;
-        } catch (error) {
-            console.error("Błąd podczas pobierania wyników:", error);
-            document.getElementById('results').innerHTML = `<p class="error">Błąd podczas pobierania wyników: ${error.message}</p>`;
+        if (getSteps) {
+            const stepsResponse = await fetch(`/scenario/text?fileName=${fileName}`);
+            const stepsData = await stepsResponse.text();
+            resultsHtml += `<div>${stepsData}</div>`;
         }
+
+        if (getStepCount) {
+            const stepCountResponse = await fetch(`/scenario/number-of-steps?fileName=${fileName}`);
+            const stepCountData = await stepCountResponse.text();
+            resultsHtml += `<p>${stepCountData}</p>`;
+        }
+
+        if (getKeyWordsCount) {
+            const KeyWordsCountResponse = await fetch(`/scenario/key-words?fileName=${fileName}`);
+            const KeyWordsCountData = await KeyWordsCountResponse.text();
+            resultsHtml += `<p>${KeyWordsCountData}</p>`;
+        }
+
+        if (getWrongSteps) {
+            const WrongstepsResponse = await fetch(`/scenario/wrongSteps?fileName=${fileName}`);
+            const WrongstepsData = await WrongstepsResponse.text();
+            resultsHtml += `<div>${WrongstepsData}</div>`;
+        }
+
+        if (getSubScenario) {
+            const SubstepsResponse = await fetch(`/scenario/substeps?fileName=${fileName}&depth=${depth}`);
+            const SubstepsData = await SubstepsResponse.text();
+            resultsHtml += `<div>${SubstepsData}</div>`;
+        }
+
+        document.getElementById('results').innerHTML = resultsHtml;
+    } catch (error) {
+        console.error("Błąd podczas pobierania wyników:", error);
+        document.getElementById('results').innerHTML = `<p class="error">Błąd podczas pobierania wyników: ${error.message}</p>`;
     }
+}
 </script>
 </body>
 </html>

@@ -24,7 +24,7 @@ public class ScenarioService {
         }
     }
 
-    public void generateCustomOutput(String fileName, boolean includePlan, boolean includeStepsCount, boolean includeKeyWordOccurrences,boolean includeIncorrectSteps,boolean includeSubSteps) {
+    public void generateCustomOutput(String fileName, boolean includePlan, boolean includeStepsCount, boolean includeKeyWordOccurrences,boolean includeIncorrectSteps,boolean includeSubSteps,int depth) {
         String inputPath = getFilePath(fileName);
         String outputPath = "output/" + fileName + "_output.json";
 
@@ -56,6 +56,7 @@ public class ScenarioService {
 
         if (includeSubSteps) {
             subVisitor = new SubscenarioVisitor();
+            subVisitor.setDepth(depth);
             scenario.accept(subVisitor);
         }
 
@@ -95,12 +96,16 @@ public class ScenarioService {
         scenario.accept(actorVisitor);
         return actorVisitor.getGeneratedIncorrectSteps();
     }
-    public String getSubSteps(String fileName){
+    public String getSubSteps(String fileName, int depth) {
         SubscenarioVisitor subVisitor = new SubscenarioVisitor();
+        subVisitor.setDepth(depth);
+
         String inputPath = getFilePath(fileName);
         ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
         Scenario scenario = checker.getReady();
+
         scenario.accept(subVisitor);
+
         return subVisitor.getSubscenarioText();
     }
 
