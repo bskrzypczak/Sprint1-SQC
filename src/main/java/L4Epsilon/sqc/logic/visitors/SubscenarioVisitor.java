@@ -5,6 +5,11 @@ import L4Epsilon.sqc.logic.elements.Instruction;
 import L4Epsilon.sqc.logic.elements.Scenario;
 import L4Epsilon.sqc.logic.elements.Step;
 
+/**
+ * Klasa implementująca wzorzec wizytatora do generowania tekstowegj
+ * reprezentacji podscenariusza i jego kroków.
+ * Działa w zależnośći od ustawionej głębokości
+ */
 public class SubscenarioVisitor implements Visitor{
     private String subscenarioText = "";
     private int stepCounter = 1;    // Główny licznik kroków
@@ -19,6 +24,11 @@ public class SubscenarioVisitor implements Visitor{
         this.depth = givenDepth;
     }
 
+    /**
+     * Odwiedza scenariusz i generuje tekst zawierający jego instrukcje
+     * W przypadku, gdy głębokość jest większa od 1, odwiedzane są również kroki zagnieżdżone
+     * @param scenario Scenariusz do przetworzenia
+     */
     @Override
     public void visitScenario(Scenario scenario) {
         for (Instruction instruction : scenario.getInstructions()){
@@ -36,6 +46,12 @@ public class SubscenarioVisitor implements Visitor{
         }
     }
 
+    /**
+     * Odwiedza scenariusz (Scenario) i generuje tekst zawierający jego instrukcje
+     * Kroki są przetwarzane tylko gdy ich głębokość nie przekracza ustawionego limitu
+     *
+     * @param step Scenariusz, który ma być przetworzony.
+     */
     @Override
     public void visitStep(Step step) {
         if(depth > prefix.length() / 2) {

@@ -2,6 +2,10 @@ package L4Epsilon.sqc.logic.visitors;
 
 import L4Epsilon.sqc.logic.elements.*;
 
+/**
+ * Klasa implementująca wzorzec wizytatora do generowania tekstowegj
+ * reprezentacji scenariusza i jego kroków.
+ */
 public class TextGenerationVisitor implements Visitor {
     private String generatedText = "";
     private int stepCounter = 1;  // Główny licznik kroków
@@ -11,6 +15,12 @@ public class TextGenerationVisitor implements Visitor {
         return generatedText;
     }
 
+    /**
+     * Odwiedza scenariusz i generuje tekst zawierający jego instrukcje oraz
+     * Numeruje każdy krok lub akcję w hierarchiczny sposób
+     *
+     * @param scenario Scenariusz do przetworzenie
+     */
     @Override
     public void visitScenario(Scenario scenario) {
         for (Instruction instruction : scenario.getInstructions()){
@@ -26,6 +36,12 @@ public class TextGenerationVisitor implements Visitor {
         }
     }
 
+    /**
+     * Odwiedza krok scenariusza i generuje tekst jego instrukcji
+     * Numeruje każdą zagnieżdżoną instrukcję zgodnie z hierarchią
+     *
+     * @param step Krok scenariusza do przetworzenia
+     */
     @Override
     public void visitStep(Step step) {
         int thisStep = 1;
