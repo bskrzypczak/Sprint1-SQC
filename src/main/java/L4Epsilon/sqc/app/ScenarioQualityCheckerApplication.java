@@ -41,7 +41,7 @@ public class ScenarioQualityCheckerApplication {
         System.out.println("Niepoprawne kroki: \n" + actorStepsVisitor.getGeneratedIncorrectSteps());
         System.out.println("Scenariusz o glebokosci 1: \n" + subscenarioVisitor.getSubscenarioText());
 
-        checker.generateJsonOutput(scenario, countingVisitor, keyWordVisitor, textVisitor, outputPath);
+        checker.generateJsonOutput(scenario, countingVisitor, keyWordVisitor, textVisitor,actorStepsVisitor,subscenarioVisitor, outputPath);
 
         SpringApplication.run(ScenarioQualityCheckerApplication.class, args);
     }

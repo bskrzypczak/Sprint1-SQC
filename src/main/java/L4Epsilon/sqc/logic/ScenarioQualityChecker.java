@@ -4,9 +4,7 @@ import L4Epsilon.sqc.logic.elements.Action;
 import L4Epsilon.sqc.logic.elements.Instruction;
 import L4Epsilon.sqc.logic.elements.Scenario;
 import L4Epsilon.sqc.logic.elements.Step;
-import L4Epsilon.sqc.logic.visitors.CountingVisitor;
-import L4Epsilon.sqc.logic.visitors.KeyWordAnalysisVisitor;
-import L4Epsilon.sqc.logic.visitors.TextGenerationVisitor;
+import L4Epsilon.sqc.logic.visitors.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -133,7 +131,7 @@ public class ScenarioQualityChecker {
      * @param outputFilePath sciezka do pliku z rozszerzeniem .json w ktorym bedzie wypisany wynik
      */
     public void generateJsonOutput(Scenario scenario, CountingVisitor countingVisitor,
-                                   KeyWordAnalysisVisitor keyWordVisitor, TextGenerationVisitor textVisitor,
+                                   KeyWordAnalysisVisitor keyWordVisitor, TextGenerationVisitor textVisitor, ActorStepsVisitor actorVisitor, SubscenarioVisitor subVisitor,
                                    String outputFilePath) {
 
         StringBuilder jsonBuilder = new StringBuilder();
@@ -182,6 +180,48 @@ public class ScenarioQualityChecker {
                     .append(",\n");
         }
 
+        if (actorVisitor!= null) {
+            String[] generatedTextLines = actorVisitor.getGeneratedIncorrectSteps().split("\n");
+            StringBuilder generatedTextArray = new StringBuilder("[\n");
+
+            for (int i = 0; i < generatedTextLines.length; i++) {
+                generatedTextArray.append("        \"")
+                        .append(generatedTextLines[i].trim().replace("\"", "\\\""))
+                        .append("\"");
+
+                if (i < generatedTextLines.length - 1) {
+                    generatedTextArray.append(",");
+                }
+                generatedTextArray.append("\n");
+            }
+            generatedTextArray.append("    ]");
+
+            jsonBuilder.append("    \"wrongSteps\": ")
+                    .append(generatedTextArray)
+                    .append(",\n");
+        }
+
+        if (textVisitor != null) {
+            String[] generatedTextLines = subVisitor.getSubscenarioText().split("\n");
+            StringBuilder generatedTextArray = new StringBuilder("[\n");
+
+            for (int i = 0; i < generatedTextLines.length; i++) {
+                generatedTextArray.append("        \"")
+                        .append(generatedTextLines[i].trim().replace("\"", "\\\""))
+                        .append("\"");
+
+                if (i < generatedTextLines.length - 1) {
+                    generatedTextArray.append(",");
+                }
+                generatedTextArray.append("\n");
+            }
+            generatedTextArray.append("    ]");
+
+            jsonBuilder.append("    \"subscenario\": ")
+                    .append(generatedTextArray)
+                    .append(",\n");
+        }
+
         if (jsonBuilder.charAt(jsonBuilder.length() - 2) == ',') {
             jsonBuilder.deleteCharAt(jsonBuilder.length() - 2);
         }
@@ -189,7 +229,6 @@ public class ScenarioQualityChecker {
         jsonBuilder.append("}\n");
 
         try {
-            Files.write(Paths.get(outputFilePath), jsonBuilder.toString().getBytes());
             Files.write(Paths.get(outputFilePath), jsonBuilder.toString().getBytes());
             System.out.println("Wynik zapisano do pliku: " + outputFilePath);
         } catch (IOException e) {

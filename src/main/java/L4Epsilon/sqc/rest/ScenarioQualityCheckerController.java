@@ -49,6 +49,9 @@ public class ScenarioQualityCheckerController {
         rawText += "<br><br>";
         rawText += "Niepoprawne kroki (bez aktora):  ";
         rawText += service.getWrongSteps(fileName);
+        rawText += "<br><br>";
+        rawText += "Scenariusz o podanej głębi:  ";
+        rawText += service.getSubSteps(fileName);
         return rawText.replace("\n", "<br>");
     }
 
@@ -69,6 +72,16 @@ public class ScenarioQualityCheckerController {
         //rawText += "<br><br>";
         String rawText = "Niepoprawne kroki (bez aktorów): <br>";
         rawText += service.getWrongSteps(fileName);
+        return rawText.replace("\n", "<br>");
+    }
+
+    @GetMapping("/substeps")
+    public String getSubSteps(@RequestParam String fileName){
+        logger.info("Pobieranie niepoprawnych kroków dla scenariusza: " + fileName);
+        //String rawText = service.getTitle(fileName);
+        //rawText += "<br><br>";
+        String rawText = "Scenariusz o podanej głębi: <br>";
+        rawText += service.getSubSteps(fileName);
         return rawText.replace("\n", "<br>");
     }
 
@@ -98,10 +111,11 @@ public class ScenarioQualityCheckerController {
             @RequestParam(required = false, defaultValue = "false") boolean includePlan,
             @RequestParam(required = false, defaultValue = "false") boolean includeStepsCount,
             @RequestParam(required = false, defaultValue = "false") boolean includeKeyWordOccurrences,
-            @RequestParam(required = false, defaultValue = "false") boolean includeIncorrectSteps
+            @RequestParam(required = false, defaultValue = "false") boolean includeIncorrectSteps,
+            @RequestParam(required = false, defaultValue = "false") boolean includeSubSteps
     ) {
         try {
-            service.generateCustomOutput(fileName, includePlan, includeStepsCount, includeKeyWordOccurrences,includeIncorrectSteps);
+            service.generateCustomOutput(fileName, includePlan, includeStepsCount, includeKeyWordOccurrences,includeIncorrectSteps,includeSubSteps);
             return ResponseEntity.ok("Output JSON został wygenerowany dla pliku: " + fileName);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd: " + e.getMessage());

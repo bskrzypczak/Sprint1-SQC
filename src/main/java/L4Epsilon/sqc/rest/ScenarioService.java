@@ -2,10 +2,7 @@ package L4Epsilon.sqc.rest;
 
 import L4Epsilon.sqc.logic.ScenarioQualityChecker;
 import L4Epsilon.sqc.logic.elements.*;
-import L4Epsilon.sqc.logic.visitors.ActorStepsVisitor;
-import L4Epsilon.sqc.logic.visitors.CountingVisitor;
-import L4Epsilon.sqc.logic.visitors.KeyWordAnalysisVisitor;
-import L4Epsilon.sqc.logic.visitors.TextGenerationVisitor;
+import L4Epsilon.sqc.logic.visitors.*;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
@@ -27,7 +24,7 @@ public class ScenarioService {
         }
     }
 
-    public void generateCustomOutput(String fileName, boolean includePlan, boolean includeStepsCount, boolean includeKeyWordOccurrences,boolean includeIncorrectSteps) {
+    public void generateCustomOutput(String fileName, boolean includePlan, boolean includeStepsCount, boolean includeKeyWordOccurrences,boolean includeIncorrectSteps,boolean includeSubSteps) {
         String inputPath = getFilePath(fileName);
         String outputPath = "output/" + fileName + "_output.json";
 
@@ -38,6 +35,7 @@ public class ScenarioService {
         KeyWordAnalysisVisitor keyWordVisitor = null;
         TextGenerationVisitor textVisitor = null;
         ActorStepsVisitor actorVisitor = null;
+        SubscenarioVisitor subVisitor = null;
 
         if (includeStepsCount) {
             countingVisitor = new CountingVisitor();
@@ -56,12 +54,19 @@ public class ScenarioService {
             scenario.accept(actorVisitor);
         }
 
+        if (includeSubSteps) {
+            subVisitor = new SubscenarioVisitor();
+            scenario.accept(subVisitor);
+        }
+
 
         checker.generateJsonOutput(
                 scenario,
                 countingVisitor,
                 keyWordVisitor,
                 textVisitor,
+                actorVisitor,
+                subVisitor,
                 outputPath
         );
     }
@@ -89,6 +94,14 @@ public class ScenarioService {
         Scenario scenario = checker.getReady();
         scenario.accept(actorVisitor);
         return actorVisitor.getGeneratedIncorrectSteps();
+    }
+    public String getSubSteps(String fileName){
+        SubscenarioVisitor subVisitor = new SubscenarioVisitor();
+        String inputPath = getFilePath(fileName);
+        ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
+        Scenario scenario = checker.getReady();
+        scenario.accept(subVisitor);
+        return subVisitor.getSubscenarioText();
     }
 
     public int getStepsCount(String fileName){

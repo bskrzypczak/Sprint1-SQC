@@ -113,6 +113,9 @@
         <label>
             <input type="checkbox" id="getWrongSteps"> Niepoprawne kroki (bez aktora)
         </label>
+        <label>
+            <input type="checkbox" id="getSubScenario"> Podscenariusz
+        </label>
     </div>
     <button onclick="fetchSelectedData()">Pokaż wynik</button>
     <div id="results" class="results"></div>
@@ -133,10 +136,11 @@
         const includeStepsCount = document.getElementById('getStepCount').checked;
         const includeKeyWordOccurrences = document.getElementById('getKeyWordsCount').checked;
         const includeIncorrectSteps = document.getElementById('getWrongSteps').checked;
+        const includeSubSteps = document.getElementById('getSubScenario').checked;
 
 
         try {
-            const generateUrl = `/scenario/generate-output?fileName=${fileName}&includePlan=${includePlan}&includeStepsCount=${includeStepsCount}&includeKeyWordOccurrences=${includeKeyWordOccurrences}&includeIncorrectSteps=${includeIncorrectSteps}`;
+            const generateUrl = `/scenario/generate-output?fileName=${fileName}&includePlan=${includePlan}&includeStepsCount=${includeStepsCount}&includeKeyWordOccurrences=${includeKeyWordOccurrences}&includeIncorrectSteps=${includeIncorrectSteps}&includeSubSteps=${includeSubSteps}`;
             const generateResponse = await fetch(generateUrl, { method: 'GET' });
 
             if (!generateResponse.ok) {
@@ -202,6 +206,7 @@
         document.getElementById('getStepCount').checked = selectAllChecked;
         document.getElementById('getKeyWordsCount').checked = selectAllChecked;
         document.getElementById('getWrongSteps').checked = selectAllChecked;
+        document.getElementById('getSubScenario').checked = selectAllChecked;
     }
 
     async function fetchSelectedData() {
@@ -211,20 +216,21 @@
         const getStepCount = document.getElementById('getStepCount').checked;
         const getKeyWordsCount = document.getElementById('getKeyWordsCount').checked;
         const getWrongSteps = document.getElementById('getWrongSteps').checked;
+        const getSubScenario = document.getElementById('getSubScenario').checked;
 
         if (!fileName) {
             document.getElementById('results').innerHTML = `<p class="error">Proszę wprowadzić nazwę pliku!</p>`;
             return;
         }
 
-        if (!getSteps && !getStepCount && !getKeyWordsCount&&!getWrongSteps) {
+        if (!getSteps && !getStepCount && !getKeyWordsCount&&!getWrongSteps&&!getSubScenario) {
             document.getElementById('results').innerHTML = `<p class="error">Proszę wybrać przynajmniej jedną opcję!</p>`;
             return;
         }
 
 
         try {
-            const generateUrl = `/scenario/generate-output?fileName=${fileName}&includePlan=${getSteps}&includeStepsCount=${getStepCount}&includeKeyWordOccurrences=${getKeyWordsCount}&includeIncorrectSteps=${getWrongSteps}`;
+            const generateUrl = `/scenario/generate-output?fileName=${fileName}&includePlan=${getSteps}&includeStepsCount=${getStepCount}&includeKeyWordOccurrences=${getKeyWordsCount}&includeIncorrectSteps=${getWrongSteps}&includeSubSteps=${getSubScenario}`;
             const generateResponse = await fetch(generateUrl, { method: 'GET' });
 
             if (!generateResponse.ok) {
@@ -262,6 +268,11 @@
                 const WrongstepsResponse = await fetch(`/scenario/wrongSteps?fileName=${fileName}`);
                 const WrongstepsData = await WrongstepsResponse.text();
                 resultsHtml += `<div>${WrongstepsData}</div>`;
+            }
+            if (getSubScenario) {
+                const SubstepsResponse = await fetch(`/scenario/substeps?fileName=${fileName}`);
+                const SubstepsData = await SubstepsResponse.text();
+                resultsHtml += `<div>${SubstepsData}</div>`;
             }
 
 
