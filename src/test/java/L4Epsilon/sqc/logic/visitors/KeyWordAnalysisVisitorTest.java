@@ -58,20 +58,6 @@ class KeyWordAnalysisVisitorTest {
         assertEquals(1, visitor.getOccurrenceCount());
     }
 
-//    @Test
-//    void test_FOR_IF_EACH() {
-//        String text = "FOR IF EACH";
-//
-//        List<Instruction> instructions = new ArrayList<>();
-//
-//        Step step = new Step(instructions, text);
-//
-//        KeyWordAnalysisVisitor visitor = new KeyWordAnalysisVisitor();
-//        visitor.visitStep(step);
-//
-//        assertEquals(0, visitor.getOccurrenceCount());
-//    }
-
     @Test
     void test_ELSE_IF() {
         String text = "ELSE IF";

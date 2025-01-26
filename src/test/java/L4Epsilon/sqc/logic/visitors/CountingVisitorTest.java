@@ -56,13 +56,17 @@ class CountingVisitorTest {
     @Test
     void mock1() {
         Scenario mockScenario = org.mockito.Mockito.mock(Scenario.class);
-        when(mockScenario.getInstructions()).thenReturn(List.of());
-//        mockScenario.put(step);
+        Step mockStep = org.mockito.Mockito.mock(Step.class);
+        when(mockScenario.getInstructions()).thenReturn(List.of(mockStep));
+
+        doAnswer(invocation -> {
+            CountingVisitor visitor = invocation.getArgument(0);
+            visitor.visitStep(mockStep);
+            return null;
+        }).when(mockStep).accept(any(CountingVisitor.class));
 
         countingVisitor.visitScenario(mockScenario);
 
-        assertEquals(0, countingVisitor.getStepsCount());
+        assertEquals(1, countingVisitor.getStepsCount());
     }
-
-
 }
