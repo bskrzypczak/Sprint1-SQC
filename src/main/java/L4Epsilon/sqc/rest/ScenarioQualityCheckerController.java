@@ -35,7 +35,7 @@ public class ScenarioQualityCheckerController {
     }
 
     @GetMapping("/all-info")
-    public String getEverything(@RequestParam String fileName){
+    public String getEverything(@RequestParam String fileName, @RequestParam(required = false, defaultValue = "1") int depth){
         logger.info("Pobieranie wszystkich informacji dla scenariusza: " + fileName);
         String rawText = service.getTitle(fileName);
         rawText += "<br><br>";
@@ -46,6 +46,12 @@ public class ScenarioQualityCheckerController {
         rawText += "<br><br>";
         rawText += "Liczba kroków w scenariuszu zaczynających się na słowo kluczowe: ";
         rawText += service.getKeyWordSteps(fileName);
+        rawText += "<br><br>";
+        rawText += "Niepoprawne kroki (bez aktora):  ";
+        rawText += service.getWrongSteps(fileName);
+        rawText += "<br><br>";
+        rawText += "Scenariusz o podanej głębi:  ";
+        rawText += service.getSubSteps(fileName, depth);
         return rawText.replace("\n", "<br>");
     }
 
@@ -55,6 +61,27 @@ public class ScenarioQualityCheckerController {
         String rawText = service.getTitle(fileName);
         rawText += "<br><br>";
         rawText += service.getPlan(fileName);
+        rawText += "<br><br>";
+        return rawText.replace("\n", "<br>");
+    }
+
+    @GetMapping("/wrongSteps")
+    public String getWrongSteps(@RequestParam String fileName){
+        logger.info("Pobieranie niepoprawnych kroków dla scenariusza: " + fileName);
+        //String rawText = service.getTitle(fileName);
+        //rawText += "<br><br>";
+        String rawText = "<br>Niepoprawne kroki (bez aktorów): <br>";
+        rawText += service.getWrongSteps(fileName);
+        return rawText.replace("\n", "<br>");
+    }
+
+    @GetMapping("/substeps")
+    public String getSubSteps(@RequestParam String fileName, @RequestParam(required = false, defaultValue = "1") int depth){
+        logger.info("Pobieranie podscenariuszy dla pliku: " + fileName + " z głębokością: " + depth);
+        //String rawText = service.getTitle(fileName);
+        //rawText += "<br><br>";
+        String rawText = "<br>Scenariusz o podanej głębi: <br>";
+        rawText += service.getSubSteps(fileName, depth);
         return rawText.replace("\n", "<br>");
     }
 
@@ -83,17 +110,20 @@ public class ScenarioQualityCheckerController {
             @RequestParam String fileName,
             @RequestParam(required = false, defaultValue = "false") boolean includePlan,
             @RequestParam(required = false, defaultValue = "false") boolean includeStepsCount,
-            @RequestParam(required = false, defaultValue = "false") boolean includeKeyWordOccurrences
+            @RequestParam(required = false, defaultValue = "false") boolean includeKeyWordOccurrences,
+            @RequestParam(required = false, defaultValue = "false") boolean includeIncorrectSteps,
+            @RequestParam(required = false, defaultValue = "false") boolean includeSubSteps,
+            @RequestParam(required = false, defaultValue = "2") int depth
     ) {
         try {
-            service.generateCustomOutput(fileName, includePlan, includeStepsCount, includeKeyWordOccurrences);
+            service.generateCustomOutput(fileName, includePlan, includeStepsCount, includeKeyWordOccurrences, includeIncorrectSteps, includeSubSteps, depth);
             return ResponseEntity.ok("Output JSON został wygenerowany dla pliku: " + fileName);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd: " + e.getMessage());
         }
     }
     @GetMapping("/download")
-    public ResponseEntity<Resource> downloadOutput(@RequestParam String fileName) {
+    public ResponseEntity<Resource> downloadOutput(@RequestParam String fileName, @RequestParam(required = false, defaultValue = "2") int depth) {
         try {
             String outputPath = "output/" + fileName + "_output.json";
             Path filePath = Paths.get(outputPath);

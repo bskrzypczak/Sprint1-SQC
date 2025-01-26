@@ -2,9 +2,7 @@ package L4Epsilon.sqc.rest;
 
 import L4Epsilon.sqc.logic.ScenarioQualityChecker;
 import L4Epsilon.sqc.logic.elements.*;
-import L4Epsilon.sqc.logic.visitors.CountingVisitor;
-import L4Epsilon.sqc.logic.visitors.KeyWordAnalysisVisitor;
-import L4Epsilon.sqc.logic.visitors.TextGenerationVisitor;
+import L4Epsilon.sqc.logic.visitors.*;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
@@ -26,7 +24,7 @@ public class ScenarioService {
         }
     }
 
-    public void generateCustomOutput(String fileName, boolean includePlan, boolean includeStepsCount, boolean includeKeyWordOccurrences) {
+    public void generateCustomOutput(String fileName, boolean includePlan, boolean includeStepsCount, boolean includeKeyWordOccurrences,boolean includeIncorrectSteps,boolean includeSubSteps,int depth) {
         String inputPath = getFilePath(fileName);
         String outputPath = "output/" + fileName + "_output.json";
 
@@ -36,6 +34,8 @@ public class ScenarioService {
         CountingVisitor countingVisitor = null;
         KeyWordAnalysisVisitor keyWordVisitor = null;
         TextGenerationVisitor textVisitor = null;
+        ActorStepsVisitor actorVisitor = null;
+        SubscenarioVisitor subVisitor = null;
 
         if (includeStepsCount) {
             countingVisitor = new CountingVisitor();
@@ -49,6 +49,16 @@ public class ScenarioService {
             textVisitor = new TextGenerationVisitor();
             scenario.accept(textVisitor);
         }
+        if (includeIncorrectSteps) {
+            actorVisitor = new ActorStepsVisitor();
+            scenario.accept(actorVisitor);
+        }
+
+        if (includeSubSteps) {
+            subVisitor = new SubscenarioVisitor();
+            subVisitor.setDepth(depth);
+            scenario.accept(subVisitor);
+        }
 
 
         checker.generateJsonOutput(
@@ -56,6 +66,8 @@ public class ScenarioService {
                 countingVisitor,
                 keyWordVisitor,
                 textVisitor,
+                actorVisitor,
+                subVisitor,
                 outputPath
         );
     }
@@ -74,6 +86,27 @@ public class ScenarioService {
         Scenario scenario = checker.getReady();
         scenario.accept(textVisitor);
         return textVisitor.getGeneratedText();
+    }
+
+    public String getWrongSteps(String fileName){
+        ActorStepsVisitor actorVisitor = new ActorStepsVisitor();
+        String inputPath = getFilePath(fileName);
+        ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
+        Scenario scenario = checker.getReady();
+        scenario.accept(actorVisitor);
+        return actorVisitor.getGeneratedIncorrectSteps();
+    }
+    public String getSubSteps(String fileName, int depth) {
+        SubscenarioVisitor subVisitor = new SubscenarioVisitor();
+        subVisitor.setDepth(depth);
+
+        String inputPath = getFilePath(fileName);
+        ScenarioQualityChecker checker = new ScenarioQualityChecker(inputPath);
+        Scenario scenario = checker.getReady();
+
+        scenario.accept(subVisitor);
+
+        return subVisitor.getSubscenarioText();
     }
 
     public int getStepsCount(String fileName){
