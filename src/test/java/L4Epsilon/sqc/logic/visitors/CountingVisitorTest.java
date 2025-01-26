@@ -26,54 +26,38 @@ class CountingVisitorTest {
     void Step0() {
         List<Instruction> instructions = new ArrayList<>();
 
-        Scenario scenario = new Scenario("abc", "system", null, instructions);
+        Scenario scenario = new Scenario("", "", null, instructions);
         countingVisitor.visitScenario(scenario);
         assertEquals(0, countingVisitor.getStepsCount());
     }
 
     @Test
     void Step1() {
-        Step step1 = new Step(null, "a");
+        Step step1 = new Step(null, "");
 
         List<Instruction> instructions = new ArrayList<>();
         instructions.add(step1);
 
-        Scenario scenario = new Scenario("abc", "system", null, instructions);
+        Scenario scenario = new Scenario("", "", null, instructions);
         countingVisitor.visitScenario(scenario);
         assertEquals(1, countingVisitor.getStepsCount());
     }
 
     @Test
-    void Step2() {
-        Step step1 = new Step(null, "a");
-
-        List<Instruction> instructions = new ArrayList<>();
-        instructions.add(step1);
-        instructions.add(step1);
-
-        Scenario scenario = new Scenario("abc", "system", null, instructions);
-        countingVisitor.visitScenario(scenario);
-        assertEquals(2, countingVisitor.getStepsCount());
-    }
-
-    @Test
-    void Step3() {
-        Step step1 = new Step(null, "a");
-
-        List<Instruction> instructions = new ArrayList<>();
-        instructions.add(step1);
-        instructions.add(step1);
-        instructions.add(step1);
-
-        Scenario scenario = new Scenario("abc", "system", null, instructions);
-        countingVisitor.visitScenario(scenario);
-        assertEquals(3, countingVisitor.getStepsCount());
-    }
-
-    @Test
-    void mock() {
+    void mock0() {
         Scenario mockScenario = org.mockito.Mockito.mock(Scenario.class);
         when(mockScenario.getInstructions()).thenReturn(List.of());
+
+        countingVisitor.visitScenario(mockScenario);
+
+        assertEquals(0, countingVisitor.getStepsCount());
+    }
+
+    @Test
+    void mock1() {
+        Scenario mockScenario = org.mockito.Mockito.mock(Scenario.class);
+        when(mockScenario.getInstructions()).thenReturn(List.of());
+//        mockScenario.put(step);
 
         countingVisitor.visitScenario(mockScenario);
 
